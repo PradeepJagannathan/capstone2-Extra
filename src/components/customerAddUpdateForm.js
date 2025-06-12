@@ -25,7 +25,7 @@ export default function CustomerAddUpdateForm(props) {
     let onDeleteClick = function () {
         log("in onDeleteClick()");
         if(props.formObject.id >= 0){
-        deleteById(props.formObject.id);
+          deleteById(props.formObject.id);
         }
         props.setFormObject(props.blankCustomer);
         props.refresh();
@@ -33,15 +33,42 @@ export default function CustomerAddUpdateForm(props) {
 
     let onSaveClick = function () {
         log("in onSaveClick()");
-        if (mode === 'Add') {
-        post(props.formObject);
-        props.refresh();
-        }
-        if (mode === 'Update') {
-        put(props.formObject.id, props.formObject);
-        props.refresh();
-        }
-        props.setFormObject(props.blankCustomer);
+        // validate Name
+          try{
+            if (props.formObject.name === ''){
+              throw new Error ("Name cannot be spaces");
+            }
+        // validate Email
+            try{
+              if ((!props.formObject.email.includes('@')) || (!props.formObject.email.includes ('.com'))){
+                  throw new Error ("Email not valid");
+              }
+        // validate password
+              try {
+                if (props.formObject.password.length < 8){
+                  throw new Error ("Password must be atleast 8 character");
+                }
+        // execuite the add or update
+                if (mode === 'Add') {
+                  post(props.formObject);
+                  props.refresh();
+                }
+                if (mode === 'Update') {
+                  put(props.formObject.id, props.formObject);
+                  props.refresh();
+                }
+                props.setFormObject(props.blankCustomer);
+
+              }catch(error){
+                console.error("Error updating customer : ", error )
+              }
+            }catch(error){
+              console.error("Error updating customer : ", error )
+            }
+            
+          }catch(error){
+            console.error("Error updating customer : ", error);
+          }
     }
 
     return (
