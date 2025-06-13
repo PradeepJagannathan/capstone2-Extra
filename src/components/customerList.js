@@ -44,7 +44,7 @@ export default function CustomerList(props) {
                 >
                   <td>{customer.name}</td>
                   <td>{customer.email}</td>
-                  <td>{customer.password}</td>
+                  <td>{(customer.password).replaceAll(/./g, '*')}</td>
                 </tr>);
               }
             )}
